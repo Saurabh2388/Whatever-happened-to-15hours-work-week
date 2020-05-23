@@ -1,0 +1,191 @@
+<h3><center> MATH2270 - Data Visualisation: Assignment 3</h3>
+<h5> Visualisations to support the article - "Whatever happened to the 15-hour workweek?" - on the conversation website </h>
+</center>
+</br></br>
+
+<h4>Student Details</h4>
+* Saurabh Mallik (S3623575)
+</br>
+</br>
+
+<h4>Introduction</h4>
+The purpose of these visualisations, is to support the article "Whatever happened to the 15-hour workweek?", on the conversation website. The article can be view on the following link https://theconversation.com/whatever-happened-to-the-15-hour-workweek-84781.
+
+There are three visualisations that have been created to support the article, the details of which are as follows.</br>
+1. Time-series plots for the average hours worked by a full-time employee in a year from six countries, namely Australia, Denmark, Germany, Korea, United Kingdom and the United States. This time-series spans from 2001 to 2016.</br>
+2. A bar chart of the average weekly hours worked by a full-time male and female in the same countries.</br>
+3. Time-series plots for GDP per hour worked for these countries spanning from 2001 to 2016. This graph shows the significant level of growth in productivity across nations over the years.
+
+Data for these visualisations have been sourced from the OECD website under an open license:</br>
+- Annual & Weekly hours worked (https://stats.oecd.org/Index.aspx?DataSetCode=ANHRS)</br>
+- GDP per hour worked (https://data.oecd.org/lprdty/gdp-per-hour-worked.htm)
+</br>
+</br>
+
+<h4>Visualisations</h4>
+```{r setup, include=FALSE}
+library(devtools)
+dev_mode(TRUE)
+devtools::install_github("hadley/ggplot2")
+devtools::install_github("ropensci/plotly")
+library(flexdashboard)
+library(ggplot2)
+library(plotly)
+library(readr)
+library(dplyr)
+```
+
+Loading the Datasets
+```{r}
+annual <- read_csv("annual.csv")
+ausavg <- read_csv("avg hrs week.csv")
+gdp <- read_csv("DP_LIVE_17102017185245898.csv")
+```
+
+Visualisation #1 - Time-series plots for the average hours worked by a full-time employee in a year from six countries, namely Australia, Denmark, Germany, Korea, United Kingdom and the United States. This time-series spans from 2001 to 2016.
+
+```{r}
+updatemenus <- list(
+  list(
+    active = 0,
+    x = -.125,
+    type= 'buttons',
+    buttons = list(
+      list(
+        label = "Australia",
+        method = "update",
+        args = list(list(visible = c(TRUE, "legendonly", "legendonly", 
+                                     "legendonly", "legendonly","legendonly")))),
+      list(
+        label = "Denmark",
+        method = "update",
+        args = list(list(visible = c("legendonly", TRUE, "legendonly", 
+                                     "legendonly", "legendonly", "legendonly")))),
+      list(
+        label = "Germany",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly", TRUE, 
+                                     "legendonly", "legendonly","legendonly")))),
+      
+      list(
+        label = "Korea",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly","legendonly", TRUE, 
+                                     "legendonly", "legendonly")))),
+      
+      list(
+        label = "United Kingdom",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly","legendonly","legendonly", TRUE, 
+                                     "legendonly")))),
+      
+      list(
+        label = "United States",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly", "legendonly","legendonly","legendonly",TRUE))))
+      
+    )
+  )
+)
+
+p1 <- plot_ly(data = annual) %>% 
+  
+  add_lines(x=~Time, y=~Value, name = "Australia", visible = "legendonly") %>%
+  add_lines(x=~Time6, y=~Value6, name = "Denmark", visible = "legendonly") %>%
+  add_lines(x=~Time3, y=~Value3, name = "Germany", visible = "legendonly") %>%
+  add_lines(x=~Time2, y=~Value2, name = "Korea", visible = "legendonly") %>%
+  add_lines(x=~Time4, y=~Value4, name = "United Kingdom", visible = "legendonly") %>%
+  add_lines(x=~Time5, y=~Value5, name = "United States", visible = "legendonly") %>%
+        
+  layout(title= "Time-series of average weekly hours worked by individuals (2001 to 2016)", showlegend=TRUE,
+         xaxis=list(zeroline = FALSE,title="Year", rangeslider = list(type = "date")),
+         yaxis=list(zeroline = FALSE,title="Weekly Hours"),
+         updatemenus=updatemenus)
+
+p1
+```
+<h6>Data sourced from https://stats.oecd.org/Index.aspx?DataSetCode=ANHRS</h6></br>
+
+
+Visualisation #2 - A bar chart of the average weekly hours worked by a full-time male and female in the same countries.
+
+```{r}
+p2 <- plot_ly(ausavg, x = ~Country, y = ~Value, color = ~Sex,
+               alpha = 1) %>% 
+  
+  add_trace(type = "bar") %>% 
+  
+  layout(title = "Average weekly hours worked based on gender in 2016",
+         yaxis = list(title = "Average Weekly Hours"))
+
+p2
+```
+<h6>Data sourced from https://stats.oecd.org/Index.aspx?DataSetCode=ANHRS</h6></br>
+
+
+Visalisation #3 - Time-series plots for GDP per hour worked for these countries spanning from 2001 to 2016. This graph shows the significant level of growth in productivity across nations over the years.
+
+```{r}
+updatemenus <- list(
+  list(
+    active = 0,
+    x = -.125,
+    type= 'buttons',
+    buttons = list(
+      list(
+        label = "Australia",
+        method = "update",
+        args = list(list(visible = c(TRUE, "legendonly", "legendonly", 
+                                     "legendonly", "legendonly","legendonly")))),
+      list(
+        label = "Denmark",
+        method = "update",
+        args = list(list(visible = c("legendonly", TRUE, "legendonly", 
+                                     "legendonly", "legendonly", "legendonly")))),
+      list(
+        label = "Germany",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly", TRUE, 
+                                     "legendonly", "legendonly","legendonly")))),
+      
+      list(
+        label = "Korea",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly","legendonly", TRUE, 
+                                     "legendonly", "legendonly")))),
+      
+      list(
+        label = "United Kingdom",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly","legendonly","legendonly", TRUE, 
+                                     "legendonly")))),
+      
+      list(
+        label = "United States",
+        method = "update",
+        args = list(list(visible = c("legendonly", "legendonly", "legendonly","legendonly","legendonly",TRUE))))
+      
+    )
+  )
+)
+
+p3 <- plot_ly(data = gdp) %>% 
+  
+  add_lines(x=~tim, y=~val, name = "Australia", visible = "legendonly") %>%
+  add_lines(x=~tim2, y=~val2, name = "Denmark", visible = "legendonly") %>%
+  add_lines(x=~tim3, y=~val3, name = "Germany", visible = "legendonly") %>%
+  add_lines(x=~tim4, y=~val4, name = "Korea", visible = "legendonly") %>%
+  add_lines(x=~tim5, y=~val5, name = "United Kingdom", visible = "legendonly") %>%
+  add_lines(x=~tim6, y=~val6, name = "United States", visible = "legendonly") %>%
+        
+  layout(title = "Time-series of GDP per hour worked in some countries (2001-2016)",
+         showlegend=TRUE,
+         xaxis=list(zeroline = FALSE,title="Year", rangeslider = list(type = "date")),
+         yaxis=list(zeroline = FALSE,title="GDP per hour worked (USD)"),
+         updatemenus=updatemenus)
+
+p3
+```
+<h6>Data sourced from https://data.oecd.org/lprdty/gdp-per-hour-worked.htm</h6></br>
+
+
